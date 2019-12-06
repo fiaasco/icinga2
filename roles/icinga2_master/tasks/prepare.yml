@@ -1,0 +1,35 @@
+---
+
+- name: sysctl | tcp/ip tuning
+  sysctl:
+    sysctl_file: /etc/sysctl.d/icinga.conf
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: true
+  with_items:
+    - { name: "net.core.rmem_max", value: "134217728" }
+    - { name: "net.core.wmem_max", value: "134217728" }
+    - { name: "net.ipv4.tcp_rmem", value: "16384 87380 67108864" }
+    - { name: "net.ipv4.tcp_wmem", value: "16384 87380 67108864" }
+  when: stage|default(false) not in ['molecule', 'docker']
+
+- name: create systemd icinga2.service.d dir
+  file:
+    path: /etc/systemd/system/icinga2.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: copy systemd limits file
+  copy:
+    content: |
+      [Service]
+      LimitNPROC=8192
+      LimitNOFILE=64000
+    dest: /etc/systemd/system/icinga2.service.d/limits.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: reload systemd

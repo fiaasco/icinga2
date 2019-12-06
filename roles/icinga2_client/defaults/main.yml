@@ -1,0 +1,39 @@
+---
+# description: repository to install Icinga2 from
+# type: string
+icinga2_repo: icinga-stable-release
+
+# description: Deploy a normal icinga client or a satellite?
+# type: bool
+icinga_is_satellite: false
+
+# description: Icinga parent zone and zone endpoints hostnames.
+#              The default is configured to connect to the master zone.
+#              Override this value with the satellite zone name and enpoints for clients connecting
+#              to a satellite.
+# type: dict
+icinga_parent:
+  zone: master
+  endpoints:
+    - "{{ groups.icinga2master|first }}"
+
+# description: Minimum tls version to use for Icinga connections
+# type: string
+icinga2_tls_protocolmin: TLSv1.2
+
+# description: remove all client config and reprovision?
+# type: bool
+icinga_client_reprovision: false
+
+# description: Icinga zone name to set, defaults to the hostname or hostname constant "NodeName"
+#              (useful to define a satellite zone name, eg "dmz")
+# type: string
+# icinga_zone:
+
+# description: icinga2-master network port number
+# type: int
+icinga2_network_port: "5665"
+
+# description: icinga2-master network port protocol
+# type: string
+icinga2_network_proto: tcp

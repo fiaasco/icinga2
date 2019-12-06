@@ -1,0 +1,24 @@
+---
+- name: enable docs installation or icinga2 schema will be missing
+  lineinfile:
+    path: /etc/yum.conf
+    regexp: '^tsflags=nodocs'
+    state: absent
+
+- name: enable required repos
+  yum:
+    name:
+      - epel-release
+      - centos-release-scl
+      - https://packages.icinga.com/epel/icinga-rpm-release-7-latest.noarch.rpm
+  when: ansible_distribution == "CentOS"
+
+- name: install required packages
+  yum:
+    name:
+      - icinga2-ido-mysql
+      - icinga2-selinux
+      - icingaweb2
+      - MySQL-python
+    enablerepo: "{{ icinga2_repo }}"
+    state: installed

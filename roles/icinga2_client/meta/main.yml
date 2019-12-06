@@ -1,0 +1,27 @@
+---
+galaxy_info:
+  author: Luc Stroobant
+  description: install an Icinga2 client
+
+  license: MIT
+
+  min_ansible_version: 2.7
+
+  platforms:
+    - name: EL
+      versions:
+        - 6
+        - 7
+    - name: Debian
+      version:
+        - 9
+        - 10
+    - name: Ubuntu
+      version:
+        - 14
+        - 18
+
+  galaxy_tags:
+    - icinga
+    - icinga2
+    - client

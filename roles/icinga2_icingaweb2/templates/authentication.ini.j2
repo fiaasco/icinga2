@@ -1,0 +1,14 @@
+#jinja2: trim_blocks: "true", lstrip_blocks: "true"
+[icingaweb2]
+backend = "db"
+resource = "icingaweb_db"
+
+{% for l in icingaweb_ldap_servers %}
+[auth_{{ l.name }}]
+backend = "{{ l.backend }}"
+resource = "{{ l.name }}"
+user_class = "{{ l.user_class }}"
+user_name_attribute = "{{ l.user_name_attribute }}"
+filter = "{{ l.filter }}"
+
+{% endfor %}

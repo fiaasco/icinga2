@@ -1,0 +1,20 @@
+---
+- name: Prepare
+  hosts: all
+  become: true
+  tasks:
+    - name: install prerequisites
+      package:
+        name:
+          - mariadb-server
+          - ufw
+        state: present
+
+    - name: enable services
+      service:
+        name: "{{ item }}"
+        enabled: true
+        state: started
+      with_items:
+        - ufw
+        - mysql

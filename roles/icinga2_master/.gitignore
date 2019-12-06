@@ -1,0 +1,14 @@
+# Ignore compiled python files
+*.pyc
+
+# Ignore ansible retry files
+*.retry
+
+# Ignore testinfra log files
+pytestdebug.log
+
+# Ignore pytest cache
+.pytest_cache/
+
+# Ignore junit xml files
+junit*.xml

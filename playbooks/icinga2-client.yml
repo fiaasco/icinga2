@@ -1,0 +1,8 @@
+---
+- name: deploy Icinga2 client
+  hosts: icinga2client
+  become: true
+  roles:
+    - role: monitoring_plugins
+    - role: icinga2_client
+    - role: icinga2_hostconfig

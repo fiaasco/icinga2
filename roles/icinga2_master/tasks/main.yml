@@ -1,0 +1,32 @@
+---
+- name: Include OS family specific constants
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Firewall
+  import_tasks: firewall.yml
+
+- name: Prepare
+  import_tasks: prepare.yml
+
+- name: Install
+  include_tasks: "install-{{ ansible_os_family }}.yml"
+
+- name: Configure master
+  import_tasks: configure-master.yml
+
+- name: Configure teams if required
+  include_tasks: teams.yml
+  when: icinga_teams_webhook is defined
+
+- name: Configure pagerduty if required
+  include_tasks: pagerduty.yml
+  when: icinga_enable_pagerduty|bool
+
+- name: allow Icinga to connect to external services
+  seboolean:
+    name: icinga2_can_connect_all
+    state: true
+    persistent: true
+  when: >
+    icinga_teams_webhook is defined
+    or icinga_enable_pagerduty|bool

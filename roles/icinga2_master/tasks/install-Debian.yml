@@ -1,0 +1,21 @@
+---
+
+- name: add icinga repo key
+  apt_key:
+    url: https://packages.icinga.com/icinga.key
+    state: present
+
+- name: add icinga repo
+  apt_repository:
+    repo: "deb http://packages.icinga.com/{{ ansible_distribution|lower }} icinga-{{ ansible_distribution_release }} main"
+    state: present
+
+- name: install icinga2 and required packages
+  apt:
+    name:
+      - icinga2
+      - icinga2-ido-mysql
+      - mailutils
+      - python-mysqldb
+    state: present
+  notify: restart icinga2

@@ -1,0 +1,72 @@
+---
+# description: repository to install Icinga2 from
+#              (Red Hat/CentOS only)
+# type: string
+icinga2_repo: icinga-stable-release
+
+# description: common name to use for Icinga2 master server
+#              defaults to inventory_hostname, should most of the time not be changed
+# type: string
+icinga2_cn: "{{ inventory_hostname }}"
+
+# description: Enable monitoring notifications?
+# type: bool
+icinga2_notifications: true
+
+# description: Icinga admin e-mail
+# type: string
+# icinga2_admin_email:
+
+# description: Icinga2 users to create
+#              Minimal required admin user for both icinga and icingaweb
+# type: dict
+icinga2_users:
+  icingaadmin:
+    desc: Icinga Admin
+    mail: "{{ icinga2_admin_email }}"
+    groups:
+      - icingaadmins
+
+# description: Icinga2 groups to create
+# type: dict
+icinga2_groups:
+  - name: icingaadmins
+    desc: Icinga Admin Group
+
+# description: Enable pagerduty notifications?
+# type: bool
+icinga_enable_pagerduty: false
+
+# description: Minimum tls version to use
+# type: string
+icinga2_tls_protocolmin: TLSv1.2
+
+# description: idodb database name
+# type: string
+icinga2_idodb_name: icinga2
+
+# description: idodb database user
+# type: string
+icinga2_idodb_user: icinga2
+
+# description: idodb database password
+# type: string
+# icinga2_idodb_pass:
+
+# description: api users definition
+# type: dict
+# example:
+# icinga2_api_users:
+#   - name: root
+#     pass: "{{ vault_icinga2_api_root_pass }}"
+#     permissions:
+#       - "*"
+icinga2_api_users: []
+
+# description: icinga2-master network port number
+# type: int
+icinga2_network_port: "5665"
+
+# description: icinga2-master network port protocol
+# type: string
+icinga2_network_proto: tcp

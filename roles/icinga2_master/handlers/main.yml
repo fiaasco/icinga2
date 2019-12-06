@@ -1,0 +1,17 @@
+---
+- name: reload systemd
+  systemd:
+    daemon_reload: true
+  notify: restart icinga2
+
+- name: create icinga2 db
+  mysql_db:
+    state: import
+    name: "{{ icinga2_idodb_name }}"
+    target: /usr/share/icinga2-ido-mysql/schema/mysql.sql
+
+- name: restart icinga2
+  service:
+    name: icinga2
+    state: restarted
+    enabled: true

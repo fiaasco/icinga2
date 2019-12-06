@@ -1,0 +1,29 @@
+---
+- name: icingacli | install required packages
+  yum:
+    name: icingacli
+    state: installed
+    enablerepo: "{{ icinga2_repo }}"
+
+- name: icingacli | check if setup module is enabled
+  command: icingacli module list
+  changed_when: false
+  register: cliconfigured
+
+- name: icingacli | enable module setup
+  command: icingacli module enable setup
+  when: not 'setup' in cliconfigured.stdout
+
+- name: icingacli | setup config directory
+  command: icingacli setup config directory
+  when: not 'setup' in cliconfigured.stdout
+
+- name: icingacli | test setup token
+  command: icingacli setup token show
+  ignore_errors: true
+  changed_when: false
+  register: clitoken
+
+- name: icingacli | setup token create
+  command: icingacli setup token create
+  when: clitoken.rc == 1

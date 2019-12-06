@@ -1,0 +1,32 @@
+---
+# description: Icinga parent zone and zone endpoints hostnames.
+#              The default is configured to connect to the master zone.
+#              Override this value with the satellite zone name and enpoints for clients connecting
+#              to a satellite.
+# type: dict
+icinga_parent:
+  zone: master
+  endpoints:
+    - "{{ groups.icinga2master|first }}"
+
+# description: Icinga user groups to send e-mail notifications
+#              should be an array between qoutes (icinga2 syntax)
+# type: string
+# example: '[ "icingaadmins" ]'
+icinga_mail_notification_groups: '[]'
+
+# description: pgsql backup warning time in seconds (default is 13 hours)
+# type: int
+postgresql_backup_warning: 46800
+
+# description: pgsql backup critical time in seconds (default is 14 hours)
+# type: int
+postgresql_backup_critical: 50400
+
+# description: mysql backup warning time in seconds (default is 13 hours)
+# type: int
+mysql_backup_warning: 46800
+
+# description: mysql backup critical time in seconds (default is 14 hours)
+# type: int
+mysql_backup_critical: 50400

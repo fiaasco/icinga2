@@ -1,0 +1,68 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+scenario:
+  name: default
+lint:
+  name: yamllint
+platforms:
+  - name: debian-icinga2-client-master
+    groups:
+      - icinga2master
+    image: debian:10
+    command: /sbin/init
+    privileged: True
+  - name: debian-icinga2-client-satellite
+    groups:
+      - icinga2satellite
+    image: debian:10
+    command: /sbin/init
+    privileged: True
+  - name: debian-icinga2-satclient
+    groups:
+      - icinga2client
+      - icinga2satclient
+    image: debian:10
+    command: /sbin/init
+    privileged: True
+  - name: debian-icinga2-std-client
+    groups:
+      - icinga2client
+      - icinga2stdclient
+    image: debian:9
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      callback_whitelist: profile_tasks
+      jinja2_extensions: jinja2.ext.do
+      gather_timeout: 30
+      timeout: 30
+    ssh_connection:
+      pipelining: true
+  inventory:
+    group_vars:
+      all:
+        stage: docker
+        icinga2_ticketsalt: aiSee1aan4etho4a
+      icinga2master:
+        icinga2_admin_email: not@available.invalid
+        icinga2_idodb_pass: dbpass
+      icinga2satellite:
+        icinga_is_satellite: true
+        icinga_zone: satellite
+      icinga2satclient:
+        icinga_parent:
+          zone: satellite
+          endpoints:
+            - "{{ groups.icinga2satellite|first }}"
+  lint:
+    name: ansible-lint
+    options:
+      x: ["204"]
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

@@ -1,0 +1,84 @@
+---
+- name: stop service when reprovisioning
+  service:
+    name: icinga2
+    state: stopped
+  ignore_errors: true
+  when: icinga_client_reprovision
+
+- name: remove files to force new certificate signing from master and remove existing api config
+  file:
+    path: "{{ item }}"
+    state: absent
+  when: icinga_client_reprovision
+  with_items:
+    - /etc/icinga2/zones.conf.orig
+    - /var/lib/icinga2/certs/ca.crt
+    - /var/lib/icinga2/api
+
+- name: put configuration templates
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/icinga2/{{ item }}"
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_user }}"
+    mode: "0640"
+  with_items:
+    - icinga2.conf
+  notify: restart icinga2
+
+- name: allow to change a host zone when reprovisioning (otherwise configured by node setup)
+  lineinfile:
+    path: /etc/icinga2/constants.conf
+    regexp: '^const ZoneName ='
+    line: 'const ZoneName = {{ icinga_zone|default("NodeName") }}'
+  when: icinga_client_reprovision
+  notify: restart icinga2
+
+- name: Generate ticket
+  command: icinga2 pki ticket --cn {{ inventory_hostname }} --salt {{ icinga2_ticketsalt }}
+  args:
+    creates: /etc/icinga2/zones.conf.orig
+  register: ticket
+
+- name: show ticket
+  debug:
+    var: ticket.stdout
+
+- name: prepare pki directory
+  file:
+    path: /var/lib/icinga2/certs
+    state: directory
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_user }}"
+    mode: "0755"
+
+- name: Generate a new local self-signed certificate.
+  command: icinga2 pki new-cert --cn {{ inventory_hostname }} --key /var/lib/icinga2/certs/{{ inventory_hostname }}.key --cert /var/lib/icinga2/certs/{{ inventory_hostname }}.crt creates=/var/lib/icinga2/certs/{{ inventory_hostname }}.crt
+  notify: restart icinga2
+
+- name: Request the master certificate from the parent host and store it as ca.crt
+  command: icinga2 pki save-cert --key /var/lib/icinga2/certs/{{ inventory_hostname }}.key --cert /var/lib/icinga2/certs/{{ inventory_hostname }}.crt --trustedcert /var/lib/icinga2/certs/ca.crt --host {{ item }}
+  args:
+    creates: /var/lib/icinga2/certs/ca.crt
+  with_items: "{{ icinga_parent.endpoints|first }}"
+  notify: restart icinga2
+
+- name: Continue with the additional node setup steps (don't add host and port if host in dmz / master connects to client)
+  command: icinga2 node setup --ticket {{ ticket.stdout }} --cn {{ inventory_hostname }} {% for ep in icinga_parent.endpoints %}--endpoint {{ ep }}{% if inventory_hostname not in groups.dmz|default([]) %},{{ ep }},5665{% endif %} {% endfor %}--zone {{ icinga_zone|default(inventory_hostname) }} --parent_host {{ icinga_parent.endpoints|first }} --trustedcert /var/lib/icinga2/certs/ca.crt --accept-config --accept-commands
+  args:
+    creates: /etc/icinga2/zones.conf.orig
+  notify: restart icinga2
+
+- name: put features configuration templates (executed after node setup to avoid overwrites)
+  template:
+    src: "features/{{ item }}.j2"
+    dest: "/etc/icinga2/features-available/{{ item }}"
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_user }}"
+    mode: "0640"
+  with_items:
+    - api.conf
+  notify: restart icinga2
+
+- meta: flush_handlers

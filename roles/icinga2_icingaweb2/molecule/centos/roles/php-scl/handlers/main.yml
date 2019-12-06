@@ -1,0 +1,11 @@
+---
+- name: restart php-fpm
+  service:
+    name: "{{ php_scl_package }}-php-fpm"
+    state: restarted
+    enabled: true
+
+- name: restart httpd
+  service:
+    name: httpd
+    state: restarted

@@ -1,0 +1,20 @@
+---
+- name: setup lamp stack for master
+  hosts: icinga2master
+  become: true
+
+  pre_tasks:
+    - apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+  roles:
+    - role: fiaasco.mariadb
+      tags:
+        - mariadb
+    - role: fiaasco.apache2
+      tags:
+        - apache2
+    - role: fiaasco.php7
+      tags:
+        - php7

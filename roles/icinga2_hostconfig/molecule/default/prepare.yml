@@ -1,0 +1,29 @@
+---
+- name: Prepare
+  hosts: all
+  gather_subset:
+    - '!all'
+    - '!any'
+    - network
+  become: true
+  tasks:
+    - name: Populate hosts file
+      lineinfile:
+        path: /etc/hosts
+        line: '{{ hostvars[item].ansible_default_ipv4.address }} {{ item }}'
+        unsafe_writes: true
+      loop: '{{ groups.all }}'
+
+    - name: install icinga package to have users created
+      apt:
+        name: icinga2
+        state: present
+
+- name: Prepare master host
+  hosts: icinga2master
+  become: true
+  tasks:
+    - name: create groups destination dir on master
+      file:
+        path: /etc/icinga2/zones.d/global-templates
+        state: directory

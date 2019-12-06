@@ -1,0 +1,97 @@
+---
+- name: configure master server
+  command: "icinga2 node setup --master --disable-confd --cn {{ icinga2_cn }}"
+  args:
+    creates: "/var/lib/icinga2/certs/{{ icinga2_cn }}.crt"
+  notify: restart icinga2
+
+- name: create zones.d config dirs
+  file:
+    path: "/etc/icinga2/zones.d/{{ item }}"
+    state: directory
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_user }}"
+    mode: "0755"
+  with_items:
+    - global-templates
+    - global-templates/groups
+    - master
+
+- name: put base configuration templates
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/icinga2/{{ item }}"
+    owner: root
+    group: root
+    mode: "0644"
+  with_items:
+    - constants.conf
+    - conf.d/api-users.conf
+  notify: restart icinga2
+
+- name: put features configuration templates
+  template:
+    src: "features/{{ item }}.j2"
+    dest: "/etc/icinga2/features-available/{{ item }}"
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_user }}"
+    mode: "0640"
+  with_items:
+    - ido-mysql.conf
+    - api.conf
+  notify: restart icinga2
+
+- name: put global templates
+  template:
+    src: "{{ item }}"
+    dest: /etc/icinga2/zones.d/global-templates/
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_user }}"
+    mode: "0644"
+  with_fileglob:
+    - ../templates/global-templates/*
+  notify: restart icinga2
+  tags:
+    - templates
+
+- name: disable notifications where required
+  command: icinga2 feature disable notification
+  args:
+    removes: /etc/icinga2/features-enabled/notification.conf
+  when: not icinga2_notifications|bool
+  notify: restart icinga2
+
+- name: enable notifications where required
+  command: icinga2 feature enable notification
+  args:
+    creates: /etc/icinga2/features-enabled/notification.conf
+  when: icinga2_notifications|bool
+  notify: restart icinga2
+
+- name: create icinga2 database
+  mysql_db:
+    name: "{{ icinga2_idodb_name }}"
+    state: present
+  register: icingadb
+  notify: create icinga2 db
+
+- name: create icinga2 database user
+  mysql_user:
+    name: "{{ icinga2_idodb_user }}"
+    password: "{{ icinga2_idodb_pass }}"
+    priv: "{{ icinga2_idodb_name }}.*:ALL"
+    append_privs: true
+    state: present
+
+- name: enable ido-mysql feature for web
+  command: icinga2 feature enable ido-mysql
+  args:
+    creates: /etc/icinga2/features-enabled/ido-mysql.conf
+  notify: restart icinga2
+
+- name: SElinux | allow master to connect to other hosts for curl webservice requests (notifications)
+  seboolean:
+    name: icinga2_can_connect_all
+    state: true
+    persistent: true
+  when: ansible_selinux.status|default(false) == "Enabled"

@@ -1,0 +1,69 @@
+---
+# description: repository to install Icinga2 from
+# type: string
+icinga2_repo: icinga-stable-release
+
+# description: icingaweb database name
+# type: string
+icingaweb_db_name: icingaweb
+
+# description: icingaweb database user
+# type: string
+icingaweb_db_user: icingaweb
+
+# description: icingaweb database password
+# type: string
+# icingaweb_db_pass:
+
+# description: salt for passwords, 16 chars [./0-9A-Za-z]
+# type: string
+# icingaweb_password_salt:
+
+# description: icingaweb admin user name
+# type: string
+icingaweb_admin_user: icingaadmin
+
+# description: icingaweb admin password
+# type: string
+# icingaweb_admin_pass:
+
+# description: ldap servers to use for icingaweb auth
+# type: dict
+# example:
+# icingaweb_ldap_servers:
+#   - name: adlocal
+#     backend: msldap
+#     user_class: "*"
+#     user_name_attribute: "userPrincipalName"
+#     filter: "(objectClass=*)"
+#     hostname: ldap.example.com
+#     port: 636
+#     encryption: ldaps
+#     root_dn: "OU=User-Groups,DC=example,DC=com"
+#     bind_dn: "CN=binddn,OU=Bind Users,DC=example,DC=com"
+#     bind_pw: "{{ vault_bind_pw }}"
+icingaweb_ldap_servers: []
+
+# description: roles (used for permission management) to define in icingaweb
+# type: dict
+# example:
+# icingaweb_roles:
+#   - name: Monitoring
+#     groups: Monitoring
+#     permissions: "module/grafana, module/monitoring, monitoring/command/schedule-check, monitoring/command/acknowledge-problem, monitoring/command/remove-acknowledgement, monitoring/command/comment/*, monitoring/command/comment/add, monitoring/command/downtime/*, monitoring/command/downtime/schedule, monitoring/command/downtime/delete"
+icingaweb_roles: []
+
+# description: default php version on distro
+#              os specif, defaults in vars/
+# type: string
+# icinga2_icingaweb2_php_version: "7.2"
+
+# description: webserver user
+#              os specif, defaults in vars/
+# type: string
+# icinga2_icingaweb2_webserver_user: apache
+
+# description: icingaweb2 schema path
+#              os specif, defaults in vars/
+# type: string
+# icinga2_icingaweb2_schema: /usr/share/doc/icingaweb2/schema/mysql.schema.sql

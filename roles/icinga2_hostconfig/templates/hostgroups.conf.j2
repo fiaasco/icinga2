@@ -1,0 +1,7 @@
+{% for group in groups %}
+{% if group != 'all' %}
+object HostGroup "{{ group }}" {
+  display_name = "{{ group }}"
+}
+{% endif %}
+{% endfor %}

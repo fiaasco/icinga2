@@ -1,0 +1,102 @@
+---
+- name: Include dynamic vars
+  include_tasks: load_vars.yml
+  with_items:
+    - icinga2_repo
+    - icinga2_icingaweb2_php_version
+    - icinga2_icingaweb2_webserver_user
+    - icinga2_icingaweb2_schema
+  vars:
+    var: "{{ main_item }}"
+  loop_control:
+    loop_var: main_item
+
+- name: install for {{ ansible_os_family }}
+  include_tasks: "install-{{ ansible_os_family }}.yml"
+
+- name: enable ido-mysql and command feature for web
+  command: "icinga2 feature enable {{ item }}"
+  args:
+    creates: "/etc/icinga2/features-enabled/{{ item }}.conf"
+  with_items:
+    - ido-mysql
+    - command
+
+- name: create icingaweb2 database
+  mysql_db:
+    name: "{{ icingaweb_db_name }}"
+    state: present
+  notify: load database schema
+
+- name: create icingaweb2 database user
+  mysql_user:
+    name: "{{ icingaweb_db_user }}"
+    password: "{{ icingaweb_db_pass }}"
+    priv: "{{ icingaweb_db_name }}.*:ALL"
+    append_privs: true
+    state: present
+
+- name: flush handlers to load database scheme
+  meta: flush_handlers
+
+- name: check if local admin user has correct password set
+  command: >
+    mysql --user={{ icingaweb_db_user }} --password={{ icingaweb_db_pass }} {{ icingaweb_db_name }}
+    --batch --skip-column-names
+    --execute="select password_hash from icingaweb_user where name='{{ icingaweb_admin_user }}'"
+  changed_when: false
+  register: admin_pass
+  tags:
+    - skip_ansible_lint
+
+- name: create or update default local admin credentials in database
+  command: >
+    mysql --user={{ icingaweb_db_user }} --password={{ icingaweb_db_pass }} {{ icingaweb_db_name }}
+    --batch --skip-column-names
+    --execute="INSERT INTO icingaweb_user (name, active, password_hash) VALUES ('{{ icingaweb_admin_user }}', 1, '{{ icingaweb_admin_pass|password_hash('sha512', icingaweb_password_salt) }}') ON DUPLICATE KEY UPDATE name='{{ icingaweb_admin_user }}', password_hash='{{ icingaweb_admin_pass|password_hash('sha512', icingaweb_password_salt) }}'"
+  when: admin_pass.stdout != icingaweb_admin_pass|password_hash('sha512', icingaweb_password_salt)
+  tags:
+    - skip_ansible_lint
+
+- name: put configuration templates
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/icingaweb2/{{ item }}"
+    owner: "{{ icinga2_icingaweb2_webserver_user }}"
+    group: icingaweb2
+    mode: "0660"
+  with_items:
+    - authentication.ini
+    - config.ini
+    - resources.ini
+    - roles.ini
+    - groups.ini
+
+- name: create monitoring module basedirs
+  file:
+    dest: "{{ item }}"
+    state: directory
+    owner: "{{ icinga2_icingaweb2_webserver_user }}"
+    group: icingaweb2
+    mode: "0775"
+  with_items:
+    - /etc/icingaweb2/modules/monitoring
+    - /etc/icingaweb2/enabledModules
+
+- name: put monitoring module configuration
+  template:
+    src: "modules/monitoring/{{ item }}.j2"
+    dest: "/etc/icingaweb2/modules/monitoring/{{ item }}"
+    owner: "{{ icinga2_icingaweb2_webserver_user }}"
+    group: icingaweb2
+    mode: "0664"
+  with_items:
+    - backends.ini
+    - commandtransports.ini
+    - config.ini
+
+- name: enable monitoring module
+  file:
+    src: /usr/share/icingaweb2/modules/monitoring
+    dest: /etc/icingaweb2/enabledModules/monitoring
+    state: link

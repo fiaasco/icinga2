@@ -1,0 +1,26 @@
+---
+- name: enable required repos
+  yum:
+    name:
+      - epel-release
+  when: ansible_distribution == "CentOS"
+
+- name: install monitoring plugins for EL {{ ansible_distribution }} all versions
+  yum:
+    name: "{{ lookup('vars', 'monitoring_plugins_{{ ansible_distribution }}_all').pkgs }}"
+    state: installed
+    enablerepo: "{{ lookup('vars', 'monitoring_plugins_{{ ansible_distribution }}_all').repo }}"
+
+- name: install monitoring plugins for EL {{ ansible_distribution }} {{ ansible_distribution_major_version }}
+  yum:
+    name: "{{ lookup('vars', 'monitoring_plugins_{{ ansible_distribution }}_{{ ansible_distribution_major_version }}').pkgs }}"
+    state: installed
+    enablerepo: "{{ lookup('vars', 'monitoring_plugins_{{ ansible_distribution }}_{{ ansible_distribution_major_version }}').repo }}"
+
+- name: install custom monitoring plugins (from package)
+  yum:
+    name: "{{ item.package }}"
+    state: installed
+    enablerepo: "{{ item.repo|default(omit) }}"
+  when: item.condition_group in group_names
+  with_items: "{{ lookup('vars', 'monitoring_plugins_custom_{{ ansible_distribution }}_{{ ansible_distribution_major_version }}') }}"

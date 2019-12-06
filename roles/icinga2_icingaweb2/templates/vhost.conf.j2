@@ -1,0 +1,59 @@
+# {{ ansible_managed }}
+
+<VirtualHost *:80>
+  ServerName {{ inventory_hostname }}
+
+  DocumentRoot /var/www/html
+  DirectoryIndex index.php
+
+  <filesmatch "\.php">
+    SetHandler "proxy:fcgi://127.0.0.1:9000"
+  </filesmatch>
+
+  <Proxy "fcgi://fcgi://127.0.0.1:9000/">
+    ProxySet connectiontimeout=5 timeout=121 acquire=1000
+  </Proxy>
+
+  ErrorLog logs/{{ inventory_hostname }}_error.log
+  CustomLog logs/{{ inventory_hostname }}_access.log combined
+
+  RewriteEngine On
+  RewriteRule ^/$ https://{{ inventory_hostname }}/icingaweb2/
+</VirtualHost>
+
+<VirtualHost *:443>
+  ServerName {{ inventory_hostname }}
+
+  SSLEngine on
+  SSLCertificateFile        /etc/ssl/{{ inventory_hostname }}/{{ inventory_hostname }}.crt
+  SSLCertificateChainFile   /etc/ssl/{{ inventory_hostname }}/{{ inventory_hostname }}.chain
+  SSLCertificateKeyFile     /etc/ssl/{{ inventory_hostname }}/{{ inventory_hostname }}.key
+  {% if icinga_httpd_ssl_protocol is defined %}
+  SSLProtocol {{ icinga_httpd_ssl_protocol }}
+  {% endif %}
+  {% if icinga_httpd_ssl_ciphers is defined %}
+  SSLCipherSuite {{ icinga_httpd_ssl_ciphers | join(',') }}
+  {% endif %}
+
+  DocumentRoot /var/www/html
+  DirectoryIndex index.php
+
+  <filesmatch "\.php">
+    SetHandler "proxy:fcgi://127.0.0.1:9000"
+  </filesmatch>
+
+  <Proxy "fcgi://fcgi://127.0.0.1:9000/">
+    ProxySet connectiontimeout=5 timeout=121 acquire=1000
+  </Proxy>
+
+  ErrorLog logs/{{ inventory_hostname }}_error.log
+  CustomLog logs/{{ inventory_hostname }}_access.log combined
+  CustomLog logs/{{ inventory_hostname }}_ssl_access.log "%h - - %t SSLProtocol: %{SSL_PROTOCOL}x SSLCipherSuite: %{SSL_CIPHER}x \"%r\" %b"
+
+  # HSTS (mod_headers is required) (15768000 seconds = 6 months)
+  Header always set Strict-Transport-Security "max-age=15768000"
+
+  RewriteEngine On
+  RewriteRule ^/$ https://{{ inventory_hostname }}/icingaweb2/
+
+</VirtualHost>

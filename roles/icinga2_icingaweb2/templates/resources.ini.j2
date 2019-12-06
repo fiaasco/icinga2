@@ -1,0 +1,34 @@
+#jinja2: trim_blocks: "true", lstrip_blocks: "true"
+[icingaweb_db]
+type = "db"
+db = "mysql"
+host = "localhost"
+port = ""
+dbname = "{{ icingaweb_db_name }}"
+username = "{{ icingaweb_db_user }}"
+password = "{{ icingaweb_db_pass }}"
+charset = ""
+persistent = "0"
+
+[icinga_ido]
+type = "db"
+db = "mysql"
+host = "localhost"
+port = ""
+dbname = "{{ icinga2_idodb_name }}"
+username = "{{ icinga2_idodb_user }}"
+password = "{{ icinga2_idodb_pass }}"
+charset = ""
+persistent = "0"
+
+{% for l in icingaweb_ldap_servers %}
+[adshared]
+type = "ldap"
+hostname = "{{ l.hostname }}"
+port = "{{ l.port }}"
+encryption = "{{ l.encryption }}"
+root_dn = "{{ l.root_dn }}"
+bind_dn = "{{ l.bind_dn }}"
+bind_pw = "{{ l.bind_pw }}"
+
+{% endfor %}

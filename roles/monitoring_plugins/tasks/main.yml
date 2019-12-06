@@ -1,0 +1,21 @@
+---
+
+- name: Include dynamic vars
+  include_tasks: load_vars.yml
+  with_items:
+    - "monitoring_plugins_{{ ansible_distribution }}_all"
+    - "monitoring_plugins_{{ ansible_distribution }}_{{ ansible_distribution_major_version }}"
+    - "monitoring_plugins_custom_{{ ansible_distribution }}_{{ ansible_distribution_major_version }}"
+    - "monitoring_plugins_path"
+    - "monitoring_plugins_user"
+  vars:
+    var: "{{ main_item }}"
+  loop_control:
+    loop_var: main_item
+
+- name: install plugins for os family
+  include_tasks: "{{ ansible_os_family }}.yml"
+
+- name: deploy eventhandlers if required
+  include_tasks: eventhandlers.yml
+  when: monitoring_plugins_eventhandlers|bool

@@ -1,0 +1,5 @@
+---
+
+- src: https://github.com/fiaasco/icinga2-master
+  version: master
+  name: icinga2-master

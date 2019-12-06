@@ -1,0 +1,8 @@
+---
+# description: Icinga2 user
+# type: string
+icinga2_user: nagios
+
+# description: monitoring (nagios) plugins directory
+# type: string
+icinga2_plugin_dir: /usr/lib/nagios/plugins

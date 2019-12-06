@@ -1,0 +1,46 @@
+---
+- name: install php
+  yum:
+    name: "{{ php_scl_package_list }}"
+    enablerepo: "{{ php_scl_repo }}"
+
+- name: disable php module if enabled
+  copy:
+    content: "# Disabled mod php, using php-fpm!"
+    dest: /etc/httpd/conf.d/php.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart httpd
+
+- name: enable proxy fcgi
+  copy:
+    content: "LoadModule proxy_fcgi_module modules/mod_proxy_fcgi.so"
+    dest: /etc/httpd/conf.modules.d/10-proxy_fcgi.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart httpd
+
+- name: enable default php fcgi configuration
+  copy:
+    src: php.conf
+    dest: /etc/httpd/conf.modules.d/10-php.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart httpd
+
+- name: configure php timezone
+  lineinfile:
+    dest: "/etc/opt/rh/{{ php_scl_package }}/php.ini"
+    regexp: "^date.timezone"
+    insertafter: "^;date.timezone "
+    line: "date.timezone = {{ php_timezone }}"
+  notify: restart php-fpm
+
+- name: make sure php-fpm is started
+  service:
+    name: "{{ php_scl_package }}-php-fpm"
+    state: started
+    enabled: true

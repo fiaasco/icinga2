@@ -1,0 +1,12 @@
+---
+- name: install monitoring plugins for {{ ansible_distribution }} all versions
+  apt:
+    name: "{{ lookup('vars', 'monitoring_plugins_{{ ansible_distribution }}_all').pkgs }}"
+    state: present
+
+- name: install custom monitoring plugins (from package)
+  apt:
+    name: "{{ item.package }}"
+    state: present
+  when: item.condition_group in group_names
+  with_items: "{{ lookup('vars', 'monitoring_plugins_custom_{{ ansible_distribution }}_{{ ansible_distribution_major_version }}') }}"

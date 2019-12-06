@@ -1,0 +1,63 @@
+---
+__monitoring_plugins_path: /usr/lib64/nagios/plugins
+__monitoring_plugins_user: icinga
+
+__monitoring_plugins_RedHat_all:
+  pkgs:
+    - nagios-common
+    - nagios-plugins
+    - nagios-plugins-by_ssh
+    - nagios-plugins-cluster
+    - nagios-plugins-dhcp
+    - nagios-plugins-dig
+    - nagios-plugins-disk
+    - nagios-plugins-dns
+    - nagios-plugins-dummy
+    - nagios-plugins-file_age
+    - nagios-plugins-http
+    - nagios-plugins-icmp
+    - nagios-plugins-ldap
+    - nagios-plugins-load
+    - nagios-plugins-log
+    - nagios-plugins-mailq
+    - nagios-plugins-mysql
+    - nagios-plugins-nrpe
+    - nagios-plugins-nt
+    - nagios-plugins-ntp
+    - nagios-plugins-oracle
+    - nagios-plugins-perl
+    - nagios-plugins-pgsql
+    - nagios-plugins-ping
+    - nagios-plugins-procs
+    - nagios-plugins-smtp
+    - nagios-plugins-snmp
+    - nagios-plugins-ssh
+    - nagios-plugins-swap
+    - nagios-plugins-tcp
+    - nagios-plugins-time
+    - nagios-plugins-users
+  repo:
+    - rhel-{{ ansible_distribution_major_version }}-server-optional-rpms
+    - Epel
+
+__monitoring_plugins_RedHat_7:
+  pkgs:
+    - nagios-plugins-check-updates
+  repo:
+    - rhel-{{ ansible_distribution_major_version }}-server-optional-rpms
+    - Epel
+
+__monitoring_plugins_RedHat_6:
+  pkgs: []
+  repo: []
+
+
+__monitoring_plugins_custom_RedHat_7:
+  - package: []
+    repo: []
+    condition_group: false
+
+__monitoring_plugins_custom_RedHat_6:
+  - package: []
+    repo: []
+    condition_group: false

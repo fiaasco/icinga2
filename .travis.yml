@@ -1,0 +1,19 @@
+---
+sudo: required
+
+language: python
+
+services:
+  - docker
+
+before_install:
+  - sudo apt-get -qq update
+
+install:
+  - pip install -r requirements.txt
+
+env:
+  - SCENARIO=default
+  - SCENARIO=ubuntu
+
+script: "molecule test --scenario-name $SCENARIO"

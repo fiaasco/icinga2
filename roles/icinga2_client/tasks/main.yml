@@ -1,0 +1,31 @@
+---
+- name: Include dynamic vars
+  include_tasks: load_vars.yml
+  with_items:
+    - "icinga2_repo"
+  vars:
+    var: "{{ main_item }}"
+  loop_control:
+    loop_var: main_item
+
+- name: Firewall
+  import_tasks: firewall.yml
+
+- name: Install
+  include_tasks: "install-{{ ansible_os_family }}.yml"
+
+- name: never run the client role on an Icinga master server
+  fail:
+    msg: Never run this role on an Icinga master server!
+  when: inventory_hostname in groups.icinga2master|default([])
+
+- name: fail when inventory_hostname is not ansible_fqdn
+  fail:
+    msg: "Make sure hostname -f outputs the fqdn configured in your inventory!"
+  when: inventory_hostname != ansible_fqdn
+
+- name: Install for {{ ansible_os_family }}
+  include_tasks: "install-{{ ansible_os_family }}.yml"
+
+- name: Configure client
+  import_tasks: configure-client.yml

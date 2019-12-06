@@ -1,0 +1,29 @@
+---
+- name: install requirements for Pagerduty plugin
+  yum:
+    name:
+      - perl-libwww-perl
+      - perl-Crypt-SSLeay
+      - perl-Sys-Syslog
+      - perl-LWP-Protocol-https
+    state: installed
+
+- name: copy pagerduty script
+  copy:
+    src: pagerduty_icinga.pl
+    dest: /usr/local/bin/pagerduty_icinga.pl
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: create cronjob for pagerduty
+  cron:
+    name: pagerduty cron
+    month: "*"
+    day: "*"
+    weekday: "*"
+    minute: "*"
+    hour: "*"
+    user: icinga
+    job: "/usr/local/bin/pagerduty_icinga.pl flush"
+    cron_file: pagerduty

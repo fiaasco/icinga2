@@ -1,0 +1,22 @@
+#jinja2: trim_blocks: "true", lstrip_blocks: "true"
+/* default required local admin user */
+[Administrators]
+users = "icingaadmin"
+permissions = "*"
+groups = "Administrators"
+
+/* roles used for ldap users */
+{% for r in icingaweb_roles %}
+[{{ r.name }}]
+{% if r.users is defined %}
+users = "{{ r.users }}"
+{% endif %}
+{% if r.groups is defined %}
+groups = "{{ r.groups }}"
+{% endif %}
+permissions = "{{ r.permissions }}"
+{% if r.filter is defined %}
+monitoring/filter/objects = "{{ r.filter }}"
+{% endif %}
+
+{% endfor %}

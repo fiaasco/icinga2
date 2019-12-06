@@ -1,0 +1,33 @@
+---
+- name: Include OS specific vars
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: make sure parent zone directory exist
+  file:
+    path: "/etc/icinga2/zones.d/{{ icinga_parent.zone }}"
+    state: directory
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_user }}"
+    mode: "0755"
+  delegate_to: "{{ groups.icinga2master|first }}"
+
+- name: put host template on master
+  template:
+    src: host.conf.j2
+    dest: "/etc/icinga2/zones.d/{{ icinga_parent.zone }}/{{ inventory_hostname }}.conf"
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_user }}"
+    mode: "0644"
+  delegate_to: "{{ groups.icinga2master|first }}"
+  notify: reload master icinga2
+
+- name: copy HostGroups config to icinga master
+  template:
+    src: "hostgroups.conf.j2"
+    dest: "/etc/icinga2/zones.d/global-templates/hostgroups.conf"
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_user }}"
+    mode: "0644"
+  delegate_to: "{{ groups.icinga2master|first }}"
+  run_once: true
+  notify: reload master icinga2

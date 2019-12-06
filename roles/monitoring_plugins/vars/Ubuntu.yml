@@ -1,0 +1,17 @@
+---
+__monitoring_plugins_path: /usr/lib/nagios/plugins
+__monitoring_plugins_user: nagios
+
+__monitoring_plugins_Ubuntu_all:
+  pkgs:
+    - monitoring-plugins
+
+__monitoring_plugins_Ubuntu_18:
+  pkgs: []
+
+__monitoring_plugins_custom_Ubuntu_18: []
+
+__monitoring_plugins_Ubuntu_16:
+  pkgs: []
+
+__monitoring_plugins_custom_Ubuntu_16: []

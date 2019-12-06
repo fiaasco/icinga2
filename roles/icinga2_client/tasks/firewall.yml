@@ -1,0 +1,52 @@
+---
+
+# Don't impose a firewall choice, check for both firewalld
+# or ufw service and enable or leave untouched as your infrastructure prefers it
+# We assume
+# - firewalld = RedHat and derivatives
+# - ufw = Debian and derivatives
+
+- name: check for service_facts
+  service_facts:
+  register: services
+
+- name: Ufw | open icinga ports
+  ufw:
+    rule: allow
+    port: "{{ icinga2_network_port }}"
+    proto: "{{ icinga2_network_proto }}"
+  when: >
+    services.ansible_facts.services.ufw is defined
+    and services.ansible_facts.services.ufw.state == "running"
+    and (inventory_hostname in groups.dmz|default([])
+    or icinga_is_satellite|bool)
+
+- name: Firewalld | open icinga ports on RedHat
+  firewalld:
+    port: "{{ icinga2_network_port }}/{{ icinga2_network_proto }}"
+    permanent: true
+    state: enabled
+    immediate: true
+  when: >
+    ansible_os_family == "RedHat"
+    and services.ansible_facts.services["firewalld.service"] is defined
+    and services.ansible_facts.services["firewalld.service"].state == "running"
+    and (inventory_hostname in groups.dmz|default([])
+    or icinga_is_satellite|bool)
+
+# This task needs to be repeated because of
+# https://wadman.co.nz/2018/11/17/Ansible-Firewalld-Module-On-Ubuntu/
+- name: Firewalld | open icinga ports on Ubuntu
+  firewalld:
+    port: "{{ icinga2_network_port }}/{{ icinga2_network_proto }}"
+    permanent: true
+    state: enabled
+    immediate: true
+  when: >
+    ansible_os_family == "Debian"
+    and services.ansible_facts.services["firewalld.service"] is defined
+    and services.ansible_facts.services["firewalld.service"].state == "running"
+    and (inventory_hostname in groups.dmz|default([])
+    or icinga_is_satellite|bool)
+  vars:
+    ansible_python_interpreter: '/usr/bin/python3'

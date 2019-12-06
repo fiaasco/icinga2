@@ -1,0 +1,12 @@
+---
+- name: Converge satellite
+  hosts: icinga2satellite
+  become: true
+  roles:
+    - role: icinga2-client
+
+- name: Converge satellite and normal clients
+  hosts: icinga2client
+  become: true
+  roles:
+    - role: icinga2-client

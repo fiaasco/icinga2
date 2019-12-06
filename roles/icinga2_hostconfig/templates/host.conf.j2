@@ -1,0 +1,57 @@
+#jinja2: trim_blocks: "true", lstrip_blocks: "true"
+# {{ ansible_managed }}
+
+object Host "{{ inventory_hostname }}" {
+  /* Import the default host template defined in `templates.conf`. */
+  import "generic-host"
+
+  vars.client_endpoint = name
+
+  {% if icinga_zone is defined or icinga_is_satellite|default(false) %}
+  vars.is_satellite = true
+  {% endif %}
+  {% if inventory_hostname in groups.icinga2master|default([]) %}
+  vars.icinga_zone = "master"
+  {% else %}
+  vars.icinga_zone = "{{ icinga_zone|default(inventory_hostname) }}"
+  {% endif %}
+
+  /* Specify the address attributes for checks e.g. `ssh` or `http`. */
+  address = "{{ ansible_default_ipv4.address }}"
+  /* address6 = "::1" */
+
+  /* Host groups based on Ansible inventory groups */
+  {% for group in hostvars[inventory_hostname].group_names %}
+  groups += [ "{{ group }}" ]
+  {% endfor %}
+
+  /* Set custom attribute `os` for hostgroup assignment in `groups.conf`. */
+  vars.os = "{{ ansible_system }}"
+  vars.ansible_os_family = "{{ ansible_os_family }}"
+  vars.ansible_distribution_major_version = "{{ ansible_distribution_major_version }}"
+
+  /* Define disks and attributes for service apply rules in `services.conf`. */
+  vars.disks["disk"] = {
+    /* No parameters. */
+  }
+
+  /* Notify by e-mail to the following groups */
+  vars.notification.mail.groups = {{ icinga_mail_notification_groups }}
+
+}
+
+{% if inventory_hostname not in groups.icinga2master %}
+object Endpoint "{{ inventory_hostname }}" {
+    {% if inventory_hostname in groups.dmz|default([]) %}
+    /* Icinga master connects to clients in DMZ */
+    host = "{{ inventory_hostname }}"
+    port = "5665"
+    {% endif %}
+}
+object Zone "{{ icinga_zone|default(inventory_hostname) }}" {
+
+  parent = "{{ icinga_parent.zone }}"
+  endpoints = [ "{{ inventory_hostname }}" ]
+
+}
+{% endif %}

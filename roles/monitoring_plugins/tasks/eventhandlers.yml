@@ -1,0 +1,19 @@
+---
+- name: Copy eventhandlers to clients
+  template:
+    src: "{{ item }}"
+    dest: "{{ monitoring_plugins_path }}/eventhandlers/"
+    owner: root
+    group: root
+    mode: "0775"
+  with_fileglob:
+    - ../templates/eventhandlers/*
+
+- name: Configure sudo access for event handlers
+  template:
+    src: monitoring-sudo.j2
+    dest: "/etc/sudoers.d/{{ monitoring_plugins_user }}"
+    owner: root
+    group: root
+    mode: "0440"
+    validate: visudo -cf %s

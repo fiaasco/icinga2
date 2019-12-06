@@ -1,0 +1,4 @@
+---
+# description: Icinga2 user
+# type: string
+icinga2_user: icinga

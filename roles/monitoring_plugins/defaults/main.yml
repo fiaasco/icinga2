@@ -1,0 +1,42 @@
+---
+# Most defaults are set as vars per OS
+
+# However, defining the variables in inventory will overwrite vars
+
+# Available standard (not OS specific) variables:
+
+# description: deploy eventhandlers?
+# type: bool
+monitoring_plugins_eventhandlers: true
+
+# description: eventhandlers (valid) sudo rules
+# type: list
+monitoring_plugins_eventhandlers_sudo:
+  - "{{ monitoring_plugins_user }} ALL=(ALL) NOPASSWD: /bin/systemctl restart httpd"
+  - "{{ monitoring_plugins_user }} ALL=(ALL) NOPASSWD: /bin/systemctl restart apache2"
+  - "{{ monitoring_plugins_user }} ALL=(ALL) NOPASSWD: /bin/systemctl restart vsftpd"
+
+# description: send e-mail notification for eventhandlers?
+# type: bool
+monitoring_plugins_event_handler_notify: false
+
+# description: address to notify to (required when the above variable is true)
+# type: string
+# monitoring_plugins_event_handler_email: "{{ operations_email }}"
+
+# Available loadable (OS specific) variables:
+#
+# description: monitoring plugins installation path
+# type: string
+# monitoring_plugins_path: /usr/lib64/nagios/plugins
+# description: monitoring (plugins) user, usually icinga or nagios
+# type: string
+# monitoring_plugins_user: icinga
+#
+# description: list of monitoring plugins packages to install on all {{ ansible_os_family }} hosts
+# type: list
+# monitoring_plugins_{{ ansible_os_family }}_all:
+#
+# descriptiption: list of monitoring plugin packages to install on {{ ansible_os_family }} {{ ansible_distribution_major_version }}
+# type: list
+# monitoring_plugins_{{ ansible_os_family }}_{{ ansible_distribution_major_version }}:

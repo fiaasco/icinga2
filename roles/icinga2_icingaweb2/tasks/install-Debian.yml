@@ -1,0 +1,27 @@
+---
+- name: add icinga repo key
+  apt_key:
+    url: https://packages.icinga.com/icinga.key
+    state: present
+
+- name: add icinga repo
+  apt_repository:
+    repo: "deb http://packages.icinga.com/{{ ansible_distribution|lower }} icinga-{{ ansible_distribution_release }} main"
+    state: present
+
+- name: install icinga2 and required packages
+  apt:
+    name:
+      - icingaweb2
+      - icinga2-ido-mysql
+      - python-mysqldb
+    state: present
+
+- name: enable php module
+  command: "phpenmod {{ item }}"
+  args:
+    creates: "/etc/php/{{ icinga2_icingaweb2_php_version }}/cli/conf.d/20-{{ item }}.ini"
+  with_items:
+    - imagick
+    - intl
+  notify: restart apache2

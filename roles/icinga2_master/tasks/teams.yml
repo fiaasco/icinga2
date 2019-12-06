@@ -1,0 +1,28 @@
+---
+- name: create teams notification folder
+  file:
+    path: /etc/icinga2/zones.d/global-templates/teams-notifications
+    state: directory
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_user }}"
+    mode: "0755"
+
+- name: put teams notification templates
+  template:
+    src: "{{ item }}"
+    dest: /etc/icinga2/zones.d/global-templates/teams-notifications/
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_user }}"
+    mode: "0644"
+  with_fileglob:
+    - ../templates/teams-notifications/*
+  notify: restart icinga2
+
+- name: put teams-notifications-command.conf file (breaks template engine)
+  copy:
+    src: teams-notifications/teams-notifications-command.conf
+    dest: /etc/icinga2/zones.d/global-templates/teams-notifications/
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_user }}"
+    mode: "0644"
+  notify: restart icinga2

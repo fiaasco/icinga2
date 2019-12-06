@@ -1,0 +1,15 @@
+---
+- name: restart icinga2
+  service:
+    name: icinga2
+    state: restarted
+    enabled: true
+
+- name: reload master icinga2
+  service:
+    name: icinga2
+    state: reloaded
+    enabled: true
+  delegate_to: "{{ item }}"
+  run_once: true
+  with_items: "{{ groups.icinga2master }}"

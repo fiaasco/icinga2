@@ -1,0 +1,25 @@
+---
+- name: Include OS family specific constants
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: create services directories on master
+  file:
+    dest: "/etc/icinga2/zones.d/global-templates/checks/{{ item.path }}"
+    state: directory
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_user }}"
+    mode: "{{ item.mode }}"
+  with_filetree: "{{ icinga2_checks_src }}"
+  when: item.state == 'directory'
+  notify: reload icinga2
+
+- name: copy service definitions to icinga master
+  template:
+    src: "{{ item.src }}"
+    dest: "/etc/icinga2/zones.d/global-templates/checks/{{ item.path }}"
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_user }}"
+    mode: "{{ item.mode }}"
+  with_filetree: "{{ icinga2_checks_src }}"
+  when: item.state == 'file'
+  notify: reload icinga2
