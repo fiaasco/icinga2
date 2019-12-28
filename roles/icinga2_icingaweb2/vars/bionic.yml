@@ -1,0 +1,16 @@
+---
+# description: Icinga2 user
+# type: string
+icinga2_user: nagios
+
+# description: default php version on distro
+# type: string
+__icinga2_icingaweb2_php_version: "7.2"
+
+# description: webserver user
+# type: string
+__icinga2_icingaweb2_webserver_user: www-data
+
+# description: icingaweb2 schema path
+# type: string
+__icinga2_icingaweb2_schema: /usr/share/icingaweb2/etc/schema/mysql.schema.sql
