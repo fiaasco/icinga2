@@ -13,7 +13,7 @@ A brief overview of the included roles:
 ## Requirements
 
 The Icinga2 master needs a database if you want to enable idodb.
-Icingaweb2 needs a full LAMP stack. In the included playbook Icingaweb2 is deployed on the master server and it's using fiaasco roles listed in galaxy.yml to setup the LAMP stack. Other options to create the LAMP stack are obviously possible.
+Icingaweb2 needs a full LAMP stack. In the included playbook Icingaweb2 is deployed on the master server and it's using fiaasco roles listed in galaxy.yml to setup the LAMP stack on Debian. Other options to create the LAMP stack are obviously possible.
 
 ## License
 
@@ -21,3 +21,4 @@ MIT
 
 ## Further Reading
 
+* (Icinga2 documentation)[https://icinga.com/docs/]
