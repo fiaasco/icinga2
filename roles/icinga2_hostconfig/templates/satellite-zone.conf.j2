@@ -1,0 +1,6 @@
+object Zone "{{ icinga_zone|default(inventory_hostname) }}" {
+
+  parent = "{{ icinga_parent.zone }}"
+  endpoints = [ "{{ inventory_hostname }}" ]
+
+}

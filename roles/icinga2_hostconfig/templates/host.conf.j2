@@ -48,10 +48,15 @@ object Endpoint "{{ inventory_hostname }}" {
     port = "5665"
     {% endif %}
 }
+
+{% if not icinga_is_satellite|default(false) %}
+{# satellite zones are defined in satellite.d #}
+{# https://icinga.com/docs/icinga2/latest/doc/15-troubleshooting/#zones-in-zones-doesnt-work #}
 object Zone "{{ icinga_zone|default(inventory_hostname) }}" {
 
   parent = "{{ icinga_parent.zone }}"
   endpoints = [ "{{ inventory_hostname }}" ]
 
 }
+{% endif %}
 {% endif %}

@@ -5,17 +5,35 @@
     creates: "/var/lib/icinga2/certs/{{ icinga2_cn }}.crt"
   notify: restart icinga2
 
-- name: create zones.d config dirs
+- name: create required config dirs
   file:
-    path: "/etc/icinga2/zones.d/{{ item }}"
+    path: "/etc/icinga2/{{ item }}"
     state: directory
     owner: "{{ icinga2_user }}"
     group: "{{ icinga2_user }}"
     mode: "0755"
   with_items:
-    - global-templates
-    - global-templates/groups
-    - master
+    - zones.d/global-templates
+    - zones.d/global-templates/groups
+    - zones.d/master
+    - satellite.d
+
+- name: include satellite zone configuration in icinga2.conf
+  lineinfile:
+    path: /etc/icinga2/icinga2.conf
+    insertafter: EOF
+    line: 'include_recursive "satellite.d"'
+  notify: restart icinga2
+
+- name: document satellite.d config dir
+  copy:
+    dest: /etc/icinga2/satellite.d/README
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_user }}"
+    content: |
+      This directory contains the Satellite zone definitions, not the Satellite client host.conf.
+      It's required since Icinga 2.11:
+      https://icinga.com/docs/icinga2/latest/doc/16-upgrading-icinga-2/#config-sync-zones-in-zones
 
 - name: put base configuration templates
   template:

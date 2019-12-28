@@ -21,6 +21,17 @@
   delegate_to: "{{ groups.icinga2master|first }}"
   notify: reload master icinga2
 
+- name: put satellite zone definition file
+  template:
+    src: satellite-zone.conf.j2
+    dest: "/etc/icinga2/satellite.d/{{ icinga_zone|default(inventory_hostname) }}.conf"
+    owner: "{{ icinga2_user }}"
+    group: "{{ icinga2_user }}"
+    mode: "0644"
+  when: icinga_is_satellite|default(false)
+  delegate_to: "{{ groups.icinga2master|first }}"
+  notify: reload master icinga2
+
 - name: copy HostGroups config to icinga master
   template:
     src: "hostgroups.conf.j2"
