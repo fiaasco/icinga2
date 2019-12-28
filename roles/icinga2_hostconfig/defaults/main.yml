@@ -15,18 +15,15 @@ icinga_parent:
 # example: '[ "icingaadmins" ]'
 icinga_mail_notification_groups: '[]'
 
-# description: pgsql backup warning time in seconds (default is 13 hours)
-# type: int
-postgresql_backup_warning: 46800
+# description: Icinga host variables.
+#              All variables prefixed with "icinga_hv_" will be available in host.vars
+#              (without the prefix).
+# type: any
+# examples:
+#   - icinga_hv_http_port: 8080
+#   - icinga_hv_postgresql_backup_warning: 46800
+#   - icinga_hv_postgresql_backup_critical: 50400
+#   - icinga_hv_mysql_backup_warning: 46800
+#   - icinga_hv_mysql_backup_critical: 50400
+#icinga_hv_<VARNAME>: OMITTED
 
-# description: pgsql backup critical time in seconds (default is 14 hours)
-# type: int
-postgresql_backup_critical: 50400
-
-# description: mysql backup warning time in seconds (default is 13 hours)
-# type: int
-mysql_backup_warning: 46800
-
-# description: mysql backup critical time in seconds (default is 14 hours)
-# type: int
-mysql_backup_critical: 50400

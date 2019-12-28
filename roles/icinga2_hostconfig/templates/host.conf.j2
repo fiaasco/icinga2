@@ -38,6 +38,14 @@ object Host "{{ inventory_hostname }}" {
   /* Notify by e-mail to the following groups */
   vars.notification.mail.groups = {{ icinga_mail_notification_groups }}
 
+  {% for key in query('varnames', '^icinga_hv_')|sort %}
+  {%   if loop.first %}
+    /* Dynamic variables */
+    /* Icinga2 dynamic variables based on the Ansible inventory */
+  {%   endif %}
+    vars.{{ key|replace('icinga_hv_', '') }} = {{ lookup('vars', key)|to_json }}
+  {% endfor %}
+
 }
 
 {% if inventory_hostname not in groups.icinga2master %}
