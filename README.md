@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/fiaasco/icinga2.svg?branch=master)](https://travis-ci.com/fiaasco/icinga2))
+
 # Ansible Collection - fiaasco.icinga2
 
 This is a role collection for the complete management of Icinga2.
@@ -21,4 +23,4 @@ MIT
 
 ## Further Reading
 
-* (Icinga2 documentation)[https://icinga.com/docs/]
+* [Icinga2 documentation](https://icinga.com/docs/)
