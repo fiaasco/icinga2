@@ -2,11 +2,15 @@
 - name: setup lamp stack for master
   hosts: icinga2master
   become: true
+  gather_facts: true
 
   pre_tasks:
-    - apt:
+    - name: update apt cache
+      apt:
         update_cache: true
         cache_valid_time: 3600
+      when: ansible_os_family == 'Debian'
+
 
   roles:
     - role: fiaasco.mariadb
@@ -15,6 +19,29 @@
     - role: fiaasco.apache2
       tags:
         - apache2
+      when: ansible_os_family == 'Debian'
     - role: fiaasco.php7
       tags:
         - php7
+      when: ansible_os_family == 'Debian'
+
+  post_tasks:
+    - when: >
+        ansible_os_family == 'RedHat'
+        and ansible_distribution_major_version is version('8', '>=')
+      name: minimal php and httpd preparations for EL 8
+      block:
+        - name:
+          yum:
+            name:
+              - httpd
+              - php-fpm
+            state: present
+        - name: start services
+          service:
+            name: "{{ item }}"
+            state: started
+            enabled: true
+          with_items:
+            - php-fpm
+            - httpd

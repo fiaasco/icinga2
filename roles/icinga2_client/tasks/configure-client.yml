@@ -81,4 +81,8 @@
     - api.conf
   notify: restart icinga2
 
-- meta: flush_handlers
+- name: ensure service is running
+  service:
+    name: icinga2
+    state: started
+    enabled: true

@@ -1,0 +1,21 @@
+---
+- name: Prepare
+  hosts: all
+  become: true
+  tasks:
+    - name: Gather limited facts for hosts file
+      setup:
+        gather_subset:
+          - '!all'
+          - '!any'
+          - network
+
+    - name: Populate hosts file
+      lineinfile:
+        path: /etc/hosts
+        line: '{{ hostvars[item].ansible_default_ipv4.address }} {{ item }}'
+        unsafe_writes: true
+      with_items: '{{ groups.all }}'
+
+- name: prepare master server
+  import_playbook: ../../playbooks/prepare-master.yml

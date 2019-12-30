@@ -40,6 +40,10 @@ __monitoring_plugins_RedHat_all:
     - rhel-{{ ansible_distribution_major_version }}-server-optional-rpms
     - Epel
 
+__monitoring_plugins_RedHat_8:
+  pkgs: []
+  repo: []
+
 __monitoring_plugins_RedHat_7:
   pkgs:
     - nagios-plugins-check-updates
@@ -51,13 +55,8 @@ __monitoring_plugins_RedHat_6:
   pkgs: []
   repo: []
 
+__monitoring_plugins_custom_RedHat_8: []
 
-__monitoring_plugins_custom_RedHat_7:
-  - package: []
-    repo: []
-    condition_group: false
+__monitoring_plugins_custom_RedHat_7: []
 
-__monitoring_plugins_custom_RedHat_6:
-  - package: []
-    repo: []
-    condition_group: false
+__monitoring_plugins_custom_RedHat_6: []
