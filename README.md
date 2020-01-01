@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/fiaasco/icinga2.svg?branch=master)](https://travis-ci.com/fiaasco/icinga2))
+[![Build Status](https://travis-ci.com/fiaasco/icinga2.svg?branch=master)](https://travis-ci.com/fiaasco/icinga2)
 
 # Ansible Collection - fiaasco.icinga2
 
