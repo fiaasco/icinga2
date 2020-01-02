@@ -28,6 +28,7 @@ All system roles are configured based on the Ansible inventory groups. An [examp
 
 Run the playbooks:
 Configure the master first
+* ansible-galaxy install -r requirements.yml (only required if you want to use the prepare-master playbook)
 * prepare-master.yml
 * icinga2-master.yml
 A satellite is a special type of client that allows other clients to connect to it and send the results to the master. Make sure to configure satellites before the connected clients or the setup won't be able to complete:

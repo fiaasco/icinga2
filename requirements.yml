@@ -1,0 +1,7 @@
+---
+- name: fiaasco.mariadb
+  version: "0.8.0"
+- name: fiaasco.php7
+  version: "0.8.0"
+- name: fiaasco.apache2
+  version: "0.8.0"

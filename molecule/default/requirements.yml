@@ -1,5 +1,1 @@
----
-roles:
-  - name: fiaasco.php7
-  - name: fiaasco.apache2
-  - name: fiaasco.mariadb
+../../requirements.yml
