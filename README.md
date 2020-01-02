@@ -20,6 +20,7 @@ Deployment of the Icinga2 master server with Icingaweb 2 requires a LAMP stack w
 * Debian 10
 * Ubuntu 18.04
 * CentOS 8
+
 The master and Icingaweb can be deployed on older distro's too (eg CentOS 7 with php-scl), but you'll have to setup the LAMP stack with other roles in that case.
 
 ## Usage
@@ -27,12 +28,15 @@ The master and Icingaweb can be deployed on older distro's too (eg CentOS 7 with
 All system roles are configured based on the Ansible inventory groups. An [example inventory is included in the molecule tests](https://github.com/fiaasco/icinga2/blob/master/molecule/default/molecule.yml). The minimum required variables are also listed in this inventory, make sure to change the ticketsalt and passwords. Other available variables are document in the role defaults.
 
 Run the playbooks:
+
 Configure the master first
 * ansible-galaxy install -r requirements.yml (only required if you want to use the prepare-master playbook)
 * prepare-master.yml
 * icinga2-master.yml
+
 A satellite is a special type of client that allows other clients to connect to it and send the results to the master. Make sure to configure satellites before the connected clients or the setup won't be able to complete:
 * icinga2-satellite.yml
+
 Afterwards, configure the normal clients:
 * icinga2-client.yml
 
