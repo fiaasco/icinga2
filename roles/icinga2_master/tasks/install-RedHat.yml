@@ -5,8 +5,19 @@
     name:
       - epel-release
       - centos-release-scl
-      - https://packages.icinga.com/epel/icinga-rpm-release-7-latest.noarch.rpm
-  when: ansible_distribution == "CentOS"
+      - "https://packages.icinga.com/epel/icinga-rpm-release-{{ ansible_distribution_major_version }}-latest.noarch.rpm"
+  when: >
+    ansible_distribution == "CentOS"
+    and ansible_distribution_major_version is version('7', '<=')
+
+- name: enable required repos
+  yum:
+    name:
+      - epel-release
+      - https://packages.icinga.com/epel/icinga-rpm-release-8-latest.noarch.rpm
+  when: >
+    ansible_distribution == "CentOS"
+    and ansible_distribution_major_version is version('8', '==')
 
 - name: install icinga2 and required packages
   yum:
@@ -15,7 +26,6 @@
       - icinga2-ido-mysql
       - icinga2-selinux
       - mailx
-      - MySQL-python
     state: present
     enablerepo: "{{ icinga2_repo }}"
   notify: restart icinga2

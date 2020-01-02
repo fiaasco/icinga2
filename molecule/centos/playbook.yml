@@ -1,0 +1,13 @@
+---
+
+- name: setup Icinga2 master
+  import_playbook: ../../playbooks/icinga2-master.yml
+
+- name: setup Icingaweb2
+  import_playbook: ../../playbooks/icinga2-master.yml
+
+- name: setup Icinga2 satellites first (required for connected clients)
+  import_playbook: ../../playbooks/icinga2-satellite.yml
+
+- name: setup Icinga2 clients
+  import_playbook: ../../playbooks/icinga2-client.yml

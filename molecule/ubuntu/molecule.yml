@@ -38,7 +38,6 @@ provisioner:
   config_options:
     defaults:
       callback_whitelist: profile_tasks
-      jinja2_extensions: jinja2.ext.do
       gather_timeout: 30
       timeout: 30
     ssh_connection:

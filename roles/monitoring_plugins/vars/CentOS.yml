@@ -39,6 +39,10 @@ __monitoring_plugins_CentOS_all:
   repo:
     - epel
 
+__monitoring_plugins_CentOS_8:
+  pkgs: []
+  repo: []
+
 __monitoring_plugins_CentOS_7:
   pkgs:
     - nagios-plugins-check-updates
@@ -49,13 +53,12 @@ __monitoring_plugins_CentOS_6:
   pkgs: []
   repo: []
 
+__monitoring_plugins_custom_CentOS_8: []
+
 
 __monitoring_plugins_custom_CentOS_7:
   - package: []
     repo: []
     condition_group: false
 
-__monitoring_plugins_custom_CentOS_6:
-  - package: []
-    repo: []
-    condition_group: false
+__monitoring_plugins_custom_CentOS_6: []

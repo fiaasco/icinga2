@@ -4,35 +4,35 @@ dependency:
 driver:
   name: docker
 scenario:
-  name: default
+  name: centos
 lint:
   name: yamllint
 platforms:
-  - name: debian-icinga2-master
+  - name: centos-icinga2-master
     groups:
       - icinga2master
       - icingaweb2
-    image: debian:10
+    image: centos:8
     command: /sbin/init
     privileged: True
-  - name: debian-icinga2-satellite
+  - name: centos-icinga2-satellite
     groups:
       - icinga2satellite
-    image: debian:10
+    image: centos:7
     command: /sbin/init
     privileged: True
-  - name: debian-icinga2-satclient
+  - name: centos-icinga2-satclient
     groups:
       - icinga2client
       - icinga2satclient
-    image: debian:10
+    image: centos:8
     command: /sbin/init
     privileged: True
-  - name: debian-icinga2-std-client
+  - name: centos-icinga2-std-client
     groups:
       - icinga2client
       - icinga2stdclient
-    image: debian:9
+    image: centos:6
 provisioner:
   name: ansible
   config_options:

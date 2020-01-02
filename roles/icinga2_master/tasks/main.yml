@@ -30,3 +30,9 @@
   when: >
     icinga_teams_webhook is defined
     or icinga_enable_pagerduty|bool
+
+- name: ensure service is running
+  service:
+    name: icinga2
+    state: started
+    enabled: true
