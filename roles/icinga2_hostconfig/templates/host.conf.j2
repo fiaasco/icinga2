@@ -38,6 +38,33 @@ object Host "{{ inventory_hostname }}" {
   /* Notify by e-mail to the following groups */
   vars.notification.mail.groups = {{ icinga_mail_notification_groups }}
 
+  /* variables used for http(s) monitoring */
+  {% if vhosts is defined %}
+  {% for v in vhosts %}
+  {% if v.delete is not defined %}
+  {% if v.monitoring == true %}
+  {% if v.ssl is defined and v.ssl != false %}
+  vars.vhosts_https["{{ v.url }}"] = {
+  }
+  {% else %}
+  vars.vhosts_http["{{ v.url }}"] = {
+  }
+  {% endif %}
+  {% endif %}
+  {% endif %}
+  {% endfor %}
+  {% endif %}
+
+  /* variables used for solr monitoring */
+  {% if solr_cores is defined %}
+  {% for core in solr_cores %}
+  {% if core.delete is not defined %}
+  vars.solr_uri = "/solr/{{ core.name }}/admin/ping"
+  vars.solr_auth_pair = "{{ core.name }}:{{ core.pass }}"
+  {% endif %}
+  {% endfor %}
+  {% endif %}
+
   {% for key in query('varnames', '^icinga_hv_')|sort %}
   {%   if loop.first %}
     /* Dynamic variables */

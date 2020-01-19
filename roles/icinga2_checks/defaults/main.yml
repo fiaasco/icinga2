@@ -32,3 +32,9 @@ icinga2_checks_procs:
 icinga2_checks_users:
   warning: 30
   critical: 50
+
+# description: default credentials for the mysql monitoring user
+# type: dict
+icinga2_checks_mysql:
+  user: monitorit
+  pass: readonly
