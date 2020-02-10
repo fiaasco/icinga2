@@ -47,6 +47,13 @@
     - conf.d/api-users.conf
   notify: restart icinga2
 
+- name: include satellite zone configuration in icinga2.conf
+  lineinfile:
+    path: /etc/icinga2/icinga2.conf
+    insertafter: EOF
+    line: 'include "conf.d/api-users.conf"'
+  notify: restart icinga2
+
 - name: put features configuration templates
   template:
     src: "features/{{ item }}.j2"
