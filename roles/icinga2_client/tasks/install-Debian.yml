@@ -21,8 +21,5 @@
   apt:
     name:
       - icinga2
-      - icinga2-ido-mysql
-      - mailutils
-      - python-mysqldb
     state: present
   notify: restart icinga2
