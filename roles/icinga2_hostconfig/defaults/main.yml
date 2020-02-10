@@ -26,3 +26,9 @@ icinga_mail_notification_groups: '[]'
 #   - icinga_hv_mysql_backup_warning: 46800
 #   - icinga_hv_mysql_backup_critical: 50400
 #icinga_hv_<VARNAME>: OMITTED
+
+# description: include all ansible groups in the host config
+#              this may cause issues with missing groups in some situations
+#              (eg when adding a host from a branch)
+# type: bool
+icinga2_hostconfig_ansible_groups: false

@@ -20,10 +20,12 @@ object Host "{{ inventory_hostname }}" {
   address = "{{ ansible_default_ipv4.address }}"
   /* address6 = "::1" */
 
+  {% if icinga2_hostconfig_ansible_groups %}
   /* Host groups based on Ansible inventory groups */
   {% for group in hostvars[inventory_hostname].group_names %}
   groups += [ "{{ group }}" ]
   {% endfor %}
+  {% endif %}
 
   /* Set custom attribute `os` for hostgroup assignment in `groups.conf`. */
   vars.os = "{{ ansible_system }}"
