@@ -53,7 +53,12 @@
   command: >
     mysql --user={{ icingaweb_db_user }} --password={{ icingaweb_db_pass }} {{ icingaweb_db_name }}
     --batch --skip-column-names
-    --execute="INSERT INTO icingaweb_user (name, active, password_hash) VALUES ('{{ icingaweb_admin_user }}', 1, '{{ icingaweb_admin_pass|password_hash('sha512', icingaweb_password_salt) }}') ON DUPLICATE KEY UPDATE name='{{ icingaweb_admin_user }}', password_hash='{{ icingaweb_admin_pass|password_hash('sha512', icingaweb_password_salt) }}'"
+    --execute="INSERT INTO icingaweb_user (name, active, password_hash)
+    VALUES
+    ('{{ icingaweb_admin_user }}', 1, '{{ icingaweb_admin_pass|password_hash('sha512', icingaweb_password_salt) }}')
+    ON DUPLICATE KEY
+    UPDATE name='{{ icingaweb_admin_user }}',
+    password_hash='{{ icingaweb_admin_pass|password_hash('sha512', icingaweb_password_salt) }}'"
   when: admin_pass.stdout != icingaweb_admin_pass|password_hash('sha512', icingaweb_password_salt)
   tags:
     - skip_ansible_lint
