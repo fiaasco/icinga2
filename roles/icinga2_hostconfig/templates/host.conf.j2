@@ -2,8 +2,12 @@
 # {{ ansible_managed }}
 
 object Host "{{ inventory_hostname }}" {
-  /* Import the default host template defined in `templates.conf`. */
+  /* Import host template defined in `templates.conf`. */
+  {% if icinga_hv_is_firewalled|default(false) %}
+  import "generic-host-no-ping"
+  {% else %}
   import "generic-host"
+  {% endif %}
 
   vars.client_endpoint = name
 
