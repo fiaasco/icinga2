@@ -77,7 +77,8 @@
   command: >
     icinga2 node setup
     --ticket {{ ticket.stdout }}
-    --cn {{ inventory_hostname }} {% for ep in icinga_parent.endpoints %}--endpoint {{ ep }}{% if inventory_hostname not in groups.dmz|default([]) %},{{ ep }},5665{% endif %} {% endfor %}
+    --cn {{ inventory_hostname }}
+    {% for ep in icinga_parent.endpoints %}--endpoint {{ ep }}{% if inventory_hostname not in groups.dmz|default([]) %},{{ ep }},5665{% endif %} {% endfor %}
     --zone {{ icinga_zone|default(inventory_hostname) }}
     --parent_host {{ icinga_parent.endpoints|first }}
     --trustedcert /var/lib/icinga2/certs/ca.crt
