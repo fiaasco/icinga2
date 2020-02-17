@@ -38,3 +38,19 @@ icinga2_checks_users:
 icinga2_checks_mysql:
   user: monitorit
   pass: readonly
+
+# description: default set of directories/mountpoints to be excluded from the check_disk check
+# type: list
+icinga2_checks_disk_exclude_default:
+  - /.snapshot/
+  - /run/docker
+  - /var/lib/containers/storage
+  - /var/lib/docker-latest/containers
+  - /var/lib/docker-latest/overlay2
+  - /var/lib/docker/containers
+  - /var/lib/docker/overlay2
+  - /var/lib/kubelet/pods
+
+# description: extra disks/mountpoints to be excluded from the check_disk check
+# type: list
+icinga2_checks_disk_exclude_extra: []
