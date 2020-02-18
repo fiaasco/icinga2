@@ -52,6 +52,9 @@ provisioner:
         stage: docker
         # ticketsalt in all, used on master and on clients to request a ticket
         icinga2_ticketsalt: aiSee1aan4etho4a
+        # exclude checking for /var/molecule globally
+        icinga2_checks_disk_exclude_extra:
+          - /var/molecule
       icinga2master:
         icinga2_admin_email: not@available.invalid
         icinga2_idodb_pass: idodbpass
