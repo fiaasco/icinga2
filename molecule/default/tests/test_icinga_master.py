@@ -35,3 +35,11 @@ def test_master_config(host):
         assert "Object 'global-templates' of type 'Zone'" in zones.stdout
         assert "Object 'director-global' of type 'Zone'" in zones.stdout
         assert "Object 'master' of type 'Zone'" in zones.stdout
+
+        # Check if disk-check includes default and extra eregi paths
+        diskcheck = host.file('/etc/icinga2/zones.d/global-templates/checks/linux/disk.conf')
+        assert diskcheck.exists
+        assert diskcheck.user == 'nagios'
+        assert diskcheck.group == 'nagios'
+        assert diskcheck.contains('/var/lib/kubelet/pods')
+        assert diskcheck.contains('/var/molecule')
