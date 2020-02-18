@@ -41,6 +41,5 @@ def test_master_config(host):
         assert diskcheck.exists
         assert diskcheck.user == 'nagios'
         assert diskcheck.group == 'nagios'
-        assert diskcheck.mode == 0o600
         assert diskcheck.contains('/var/lib/kubelet/pods')
         assert diskcheck.contains('/var/molecule')
