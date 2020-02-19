@@ -15,3 +15,8 @@ __monitoring_plugins_Debian_9:
   pkgs: []
 
 __monitoring_plugins_custom_Debian_9: []
+
+__monitoring_plugins_Debian_8:
+  pkgs: []
+
+__monitoring_plugins_custom_Debian_8: []
