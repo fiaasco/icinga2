@@ -33,11 +33,6 @@ platforms:
       - icinga2client
       - icinga2stdclient
     image: debian:9
-  - name: debian-icinga2-std-client8
-    groups:
-      - icinga2client
-      - icinga2stdclient
-    image: debian:8
 provisioner:
   name: ansible
   config_options:
