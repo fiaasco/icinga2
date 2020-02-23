@@ -16,6 +16,7 @@ The collection is tested against different versions of Debian, Ubuntu and CentOS
 
 ## Requirements
 
+Ansible 2.9 is required to use Ansible collections.
 Deployment of the Icinga2 master server with Icingaweb 2 requires a LAMP stack with PHP >= 5.6.0. The LAMP stack is configured with the prepare-master.yml playbook and it's only supported on recent releases of the tested distro's in this collection:
 * Debian 10
 * Ubuntu 18.04
