@@ -9,7 +9,11 @@ object Host "{{ inventory_hostname }}" {
   import "generic-host"
   {% endif %}
 
+  {% if not icinga_hv_network_device|default(false) %}
   vars.client_endpoint = name
+  {% else %}
+  # no vars.client_endpoint: ping only device #}
+  {% endif %}
 
   {% if icinga_zone is defined or icinga_is_satellite|default(false) %}
   vars.is_satellite = true
@@ -81,6 +85,9 @@ object Host "{{ inventory_hostname }}" {
 
 }
 
+{% if not icinga_hv_network_device|default(false) %}
+{# don't define endpoint and zone for network devices #}
+
 {% if inventory_hostname not in groups.icinga2master %}
 object Endpoint "{{ inventory_hostname }}" {
     {% if inventory_hostname in groups.dmz|default([]) %}
@@ -99,5 +106,6 @@ object Zone "{{ icinga_zone|default(inventory_hostname) }}" {
   endpoints = [ "{{ inventory_hostname }}" ]
 
 }
+{% endif %}
 {% endif %}
 {% endif %}
