@@ -35,6 +35,7 @@ object Host "{{ inventory_hostname }}" {
   {% endfor %}
   {% endif %}
 
+  {% if not icinga_hv_network_device|default(false) %}
   /* Set custom attribute `os` for hostgroup assignment in `groups.conf`. */
   vars.os = "{{ ansible_system }}"
   vars.ansible_os_family = "{{ ansible_os_family }}"
@@ -44,6 +45,7 @@ object Host "{{ inventory_hostname }}" {
   vars.disks["disk"] = {
     /* No parameters. */
   }
+  {% endif %}
 
   /* Notify by e-mail to the following groups */
   vars.notification.mail.groups = {{ icinga_mail_notification_groups }}
