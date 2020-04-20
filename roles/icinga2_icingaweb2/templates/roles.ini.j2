@@ -14,7 +14,7 @@ users = "{{ r.users }}"
 {% if r.groups is defined %}
 groups = "{{ r.groups }}"
 {% endif %}
-permissions = "{{ r.permissions }}"
+permissions = "{{ r.permissions|sort|unique|join(', ') }}"
 {% if r.filter is defined %}
 monitoring/filter/objects = "{{ r.filter }}"
 {% endif %}
