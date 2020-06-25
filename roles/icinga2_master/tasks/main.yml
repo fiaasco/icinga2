@@ -28,8 +28,9 @@
     state: true
     persistent: true
   when: >
-    icinga_teams_webhook is defined
-    or icinga_enable_pagerduty|bool
+    ansible_selinux.status|default(false) == "Enabled"
+    and (icinga_teams_webhook is defined
+    or icinga_enable_pagerduty|bool)
 
 - name: ensure service is running
   service:

@@ -70,3 +70,12 @@ icinga2_network_port: "5665"
 # description: icinga2-master network port protocol
 # type: string
 icinga2_network_proto: tcp
+
+# description: Teams notification webhook url
+#              define to enable Teams notifications
+# type: string
+# icinga_teams_notifications:
+
+# description: interval for Teams notifications in seconds (standard icinga2 interval format)
+# type: string
+icinga_teams_notif_interval: 1h
