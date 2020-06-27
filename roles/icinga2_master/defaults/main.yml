@@ -1,9 +1,4 @@
 ---
-# description: repository to install Icinga2 from
-#              (Red Hat/CentOS only)
-# type: string
-icinga2_repo: icinga-stable-release
-
 # description: common name to use for Icinga2 master server
 #              defaults to inventory_hostname, should most of the time not be changed
 # type: string
@@ -79,3 +74,7 @@ icinga2_network_proto: tcp
 # description: interval for Teams notifications in seconds (standard icinga2 interval format)
 # type: string
 icinga_teams_notif_interval: 1h
+
+# description: RPM repository to install Icinga2 from
+# type: string
+icinga2_rpm_repo: icinga-stable-release

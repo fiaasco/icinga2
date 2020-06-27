@@ -30,5 +30,5 @@
       - icinga2-ido-mysql
       - icinga2-selinux
       - icingaweb2
-    enablerepo: "{{ icinga2_repo }}"
+    enablerepo: "{{ icinga2_rpm_repo }}"
     state: installed

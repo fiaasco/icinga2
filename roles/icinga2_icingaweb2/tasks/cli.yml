@@ -3,7 +3,7 @@
   yum:
     name: icingacli
     state: installed
-    enablerepo: "{{ icinga2_repo }}"
+    enablerepo: "{{ icinga2_rpm_repo }}"
 
 - name: icingacli | check if setup module is enabled
   command: icingacli module list

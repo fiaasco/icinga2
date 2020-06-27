@@ -27,5 +27,5 @@
       - icinga2-selinux
       - mailx
     state: present
-    enablerepo: "{{ icinga2_repo }}"
+    enablerepo: "{{ icinga2_rpm_repo }}"
   notify: restart icinga2

@@ -1,8 +1,4 @@
 ---
-# description: repository to install Icinga2 from
-# type: string
-icinga2_repo: icinga-stable-release
-
 # description: icingaweb database name
 # type: string
 icingaweb_db_name: icingaweb
@@ -67,3 +63,7 @@ icingaweb_roles: []
 #              os specif, defaults in vars/
 # type: string
 # icinga2_icingaweb2_schema: /usr/share/doc/icingaweb2/schema/mysql.schema.sql
+
+# description: RPM repository to install Icinga2 from
+# type: string
+icinga2_rpm_repo: icinga-stable-release

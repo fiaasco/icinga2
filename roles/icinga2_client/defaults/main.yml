@@ -1,8 +1,4 @@
 ---
-# description: repository to install Icinga2 from
-# type: string
-icinga2_repo: icinga-stable-release
-
 # description: Deploy a normal icinga client or a satellite?
 # type: bool
 icinga_is_satellite: false
@@ -37,3 +33,7 @@ icinga2_network_port: "5665"
 # description: icinga2-master network port protocol
 # type: string
 icinga2_network_proto: tcp
+
+# description: RPM repository to install Icinga2 from
+# type: string
+icinga2_rpm_repo: icinga-stable-release
