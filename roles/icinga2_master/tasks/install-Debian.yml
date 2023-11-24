@@ -16,6 +16,6 @@
       - icinga2
       - icinga2-ido-mysql
       - mailutils
-      - python-mysqldb
+      - python3-mysqldb
     state: present
   notify: restart icinga2

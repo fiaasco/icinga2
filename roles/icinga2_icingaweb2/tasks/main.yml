@@ -104,3 +104,6 @@
     src: /usr/share/icingaweb2/modules/monitoring
     dest: /etc/icingaweb2/enabledModules/monitoring
     state: link
+
+- name: setup icingacli
+  import_tasks: cli.yml

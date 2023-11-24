@@ -5,21 +5,19 @@ driver:
   name: docker
 scenario:
   name: default
-lint:
-  name: yamllint
 platforms:
   - name: debian-icinga2-master
     groups:
       - icinga2master
       - icingaweb2
-    image: debian:10
-    command: /sbin/init
+    image: debian:12
+    command: /lib/systemd/systemd
     privileged: True
   - name: debian-icinga2-satellite
     groups:
       - icinga2satellite
-    image: debian:10
-    command: /sbin/init
+    image: debian:11
+    command: /lib/systemd/systemd
     privileged: True
   - name: debian-icinga2-satclient
     groups:
@@ -76,11 +74,5 @@ provisioner:
           zone: satellite
           endpoints:
             - "{{ groups.icinga2satellite|first }}"
-  lint:
-    name: ansible-lint
-    options:
-      x: ["204"]
 verifier:
   name: testinfra
-  lint:
-    name: flake8

@@ -5,8 +5,11 @@ driver:
   name: docker
 scenario:
   name: ubuntu
-lint:
-  name: yamllint
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+  flake8
 platforms:
   - name: ubuntu-icinga2-master
     groups:
@@ -32,7 +35,7 @@ platforms:
     groups:
       - icinga2client
       - icinga2stdclient
-    image: ubuntu:xenial
+    image: ubuntu:focal
 provisioner:
   name: ansible
   config_options:
