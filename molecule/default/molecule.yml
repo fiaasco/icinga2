@@ -30,7 +30,7 @@ platforms:
     groups:
       - icinga2client
       - icinga2stdclient
-    image: debian:9
+    image: debian:12
 provisioner:
   name: ansible
   config_options:

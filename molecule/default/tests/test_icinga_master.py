@@ -31,6 +31,7 @@ def test_master_config(host):
         assert host.file('/etc/icinga2/features-enabled/ido-mysql.conf').is_symlink
 
         # Check if config is active
+        dump = host.run('icinga2 daemon -C --dump-objects')
         zones = host.run('icinga2 object list --type zone')
         assert "Object 'global-templates' of type 'Zone'" in zones.stdout
         assert "Object 'director-global' of type 'Zone'" in zones.stdout
