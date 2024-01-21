@@ -14,7 +14,8 @@
     name:
       - icingaweb2
       - icinga2-ido-mysql
-      - python-mysqldb
+      - python3-mysqldb
+      - icingacli
     state: present
 
 - name: enable php module

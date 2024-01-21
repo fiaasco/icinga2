@@ -19,3 +19,7 @@
 - name: deploy eventhandlers if required
   include_tasks: eventhandlers.yml
   when: monitoring_plugins_eventhandlers|bool
+
+- name: deploy custom plugins if required
+  include_tasks: customplugins.yml
+  when: monitoring_plugins_customplugins|bool

@@ -13,4 +13,4 @@ __icinga2_icingaweb2_webserver_user: www-data
 
 # description: icingaweb2 schema path
 # type: string
-__icinga2_icingaweb2_schema: /usr/share/icingaweb2/etc/schema/mysql.schema.sql
+__icinga2_icingaweb2_schema: /usr/share/icingaweb2/schema/mysql.schema.sql

@@ -31,7 +31,10 @@ No tags available.
 
 ## License
 
-MIT
+* Ansible role: MIT
+* check\_systemd\_service: no license in project, (original author patrikskrivanek)[https://github.com/patrikskrivanek/icinga2-check_systemd_service]
+
+
 
 ## Further Reading
 

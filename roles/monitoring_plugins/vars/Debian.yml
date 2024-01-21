@@ -6,6 +6,14 @@ __monitoring_plugins_Debian_all:
   pkgs:
     - monitoring-plugins
 
+__monitoring_plugins_Debian_12:
+  pkgs: []
+__monitoring_plugins_custom_Debian_12: []
+
+__monitoring_plugins_Debian_11:
+  pkgs: []
+__monitoring_plugins_custom_Debian_11: []
+
 __monitoring_plugins_Debian_10:
   pkgs: []
 

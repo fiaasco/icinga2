@@ -22,6 +22,7 @@ def test_std_client_config(host):
         assert "-icinga2-master' of type 'Endpoint':" in endpoints.stdout
 
         # Check if config from master is included
+        dump = host.run('icinga2 daemon -C --dump-objects')
         zones = host.run('icinga2 object list --type zone')
         assert "Object 'global-templates' of type 'Zone'" in zones.stdout
         assert "Object 'director-global' of type 'Zone'" in zones.stdout

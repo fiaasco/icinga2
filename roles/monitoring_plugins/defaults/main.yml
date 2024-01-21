@@ -15,6 +15,11 @@ monitoring_plugins_eventhandlers_sudo:
   - "{{ monitoring_plugins_user }} ALL=(ALL) NOPASSWD: /bin/systemctl restart httpd"
   - "{{ monitoring_plugins_user }} ALL=(ALL) NOPASSWD: /bin/systemctl restart apache2"
   - "{{ monitoring_plugins_user }} ALL=(ALL) NOPASSWD: /bin/systemctl restart vsftpd"
+  - "{{ monitoring_plugins_user }} ALL=(ALL) NOPASSWD: /bin/systemctl restart mysql"
+  - "{{ monitoring_plugins_user }} ALL=(ALL) NOPASSWD: /bin/systemctl restart nginx"
+  - "{{ monitoring_plugins_user }} ALL=(ALL) NOPASSWD: /bin/systemctl restart varnish"
+  - "{{ monitoring_plugins_user }} ALL=(ALL) NOPASSWD: /bin/systemctl restart solr"
+  - "{{ monitoring_plugins_user }} ALL=(ALL) NOPASSWD: /bin/systemctl restart php7.3-fpm"
 
 # description: send e-mail notification for eventhandlers?
 # type: bool
@@ -22,7 +27,11 @@ monitoring_plugins_event_handler_notify: false
 
 # description: address to notify to (required when the above variable is true)
 # type: string
-# monitoring_plugins_event_handler_email: "{{ operations_email }}"
+# monitoring_plugins_event_handler_email: operations@domain.invalid
+
+# description: deploy custom plugins include in the role?
+# type: bool
+monitoring_plugins_customplugins: true
 
 # Available loadable (OS specific) variables:
 #

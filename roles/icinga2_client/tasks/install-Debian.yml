@@ -1,14 +1,27 @@
 ---
+- name: install required packages
+  apt:
+    name:
+      - apt-transport-https
+    state: present
 
 - name: add icinga repo key
   apt_key:
     url: https://packages.icinga.com/icinga.key
     state: present
+  when: ansible_distribution_version is version_compare('11', '<')
 
-- name: add icinga repo
-  apt_repository:
-    repo: "deb http://packages.icinga.com/{{ ansible_distribution|lower }} icinga-{{ ansible_distribution_release }} main"
-    state: present
+- name: add icinga repo key
+  ansible.builtin.get_url:
+    url: "https://packages.icinga.com/icinga.key"
+    dest: "/usr/share/keyrings/icinga.gpg"
+    mode: '0644'
+    force: true
+  when: ansible_distribution_version is version_compare('11', '>=')
+
+#- name: add icinga repo
+#  apt_repository:
+#    repo: "deb [signed-by=/usr/share/keyrings/icinga.gpg] https://packages.icinga.com/debian icinga-{{ ansible_distribution_release }} main"
 
 - name: enable backports for debian 9
   apt_repository:
