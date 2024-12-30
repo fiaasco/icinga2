@@ -1,22 +1,27 @@
 ---
+- name: install required packages
+  apt:
+    name:
+      - apt-transport-https
+    state: present
+
 - name: add icinga repo key
   apt_key:
     url: https://packages.icinga.com/icinga.key
     state: present
+  when: ansible_distribution_version is version_compare('11', '<')
+
+- name: add icinga repo key
+  ansible.builtin.get_url:
+    url: "https://packages.icinga.com/icinga.key"
+    dest: "/usr/share/keyrings/icinga.asc"
+    mode: '0644'
+    force: true
+  when: ansible_distribution_version is version_compare('11', '>=')
 
 - name: add icinga repo
   apt_repository:
-    repo: "deb http://packages.icinga.com/{{ ansible_distribution|lower }} icinga-{{ ansible_distribution_release }} main"
-    state: present
-
-- name: install icinga2 and required packages
-  apt:
-    name:
-      - icingaweb2
-      - icinga2-ido-mysql
-      - python3-mysqldb
-      - icingacli
-    state: present
+    repo: "deb [signed-by=/usr/share/keyrings/icinga.asc] https://packages.icinga.com/debian icinga-{{ ansible_distribution_release }} main"
 
 - name: enable php module
   command: "phpenmod {{ item }}"
@@ -25,3 +30,9 @@
   with_items:
     - imagick
     - intl
+
+- name: install required packages
+  apt:
+    name:
+      - icingaweb2
+    state: present

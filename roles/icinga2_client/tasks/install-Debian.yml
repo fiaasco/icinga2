@@ -14,14 +14,14 @@
 - name: add icinga repo key
   ansible.builtin.get_url:
     url: "https://packages.icinga.com/icinga.key"
-    dest: "/usr/share/keyrings/icinga.gpg"
+    dest: "/usr/share/keyrings/icinga.asc"
     mode: '0644'
     force: true
   when: ansible_distribution_version is version_compare('11', '>=')
 
-#- name: add icinga repo
-#  apt_repository:
-#    repo: "deb [signed-by=/usr/share/keyrings/icinga.gpg] https://packages.icinga.com/debian icinga-{{ ansible_distribution_release }} main"
+- name: add icinga repo
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/icinga.asc] https://packages.icinga.com/debian icinga-{{ ansible_distribution_release }} main"
 
 - name: enable backports for debian 9
   apt_repository:
