@@ -9,7 +9,6 @@
   apt_key:
     url: https://packages.icinga.com/icinga.key
     state: present
-  when: ansible_distribution_version is version_compare('11', '<')
 
 - name: add icinga repo key
   ansible.builtin.get_url:
@@ -17,18 +16,10 @@
     dest: "/usr/share/keyrings/icinga.asc"
     mode: '0644'
     force: true
-  when: ansible_distribution_version is version_compare('11', '>=')
 
 - name: add icinga repo
   apt_repository:
     repo: "deb [signed-by=/usr/share/keyrings/icinga.asc] https://packages.icinga.com/debian icinga-{{ ansible_distribution_release }} main"
-
-- name: enable backports for debian 9
-  apt_repository:
-    filename: backports
-    repo: "deb http://deb.debian.org/debian stretch-backports main"
-    state: present
-  when: ansible_distribution_release == 'stretch'
 
 - name: install icinga2 and required packages
   apt:

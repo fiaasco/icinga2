@@ -10,13 +10,13 @@ platforms:
     groups:
       - icinga2master
       - icingaweb2
-    image: debian:12
+    image: debian:11
     command: /lib/systemd/systemd
     privileged: True
   - name: debian-icinga2-satellite
     groups:
       - icinga2satellite
-    image: debian:11
+    image: debian:12
     command: /lib/systemd/systemd
     privileged: True
   - name: debian-icinga2-satclient
@@ -56,6 +56,8 @@ provisioner:
       icinga2master:
         icinga2_admin_email: not@available.invalid
         icinga2_idodb_pass: idodbpass
+        php7_versions:
+          - '7.4'
       icingaweb2:
         apache2_adminhost_https: false
         icingaweb_db_pass: webdbpass
