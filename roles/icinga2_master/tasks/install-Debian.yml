@@ -1,14 +1,14 @@
 ---
-
 - name: add icinga repo key
-  apt_key:
-    url: https://packages.icinga.com/icinga.key
-    state: present
+  ansible.builtin.get_url:
+    url: "https://packages.icinga.com/icinga.key"
+    dest: "/usr/share/keyrings/icinga.asc"
+    mode: '0644'
+    force: true
 
 - name: add icinga repo
   apt_repository:
-    repo: "deb http://packages.icinga.com/{{ ansible_distribution|lower }} icinga-{{ ansible_distribution_release }} main"
-    state: present
+    repo: "deb [signed-by=/usr/share/keyrings/icinga.asc] https://packages.icinga.com/debian icinga-{{ ansible_distribution_release }} main"
 
 - name: install icinga2 and required packages
   apt:
@@ -16,6 +16,6 @@
       - icinga2
       - icinga2-ido-mysql
       - mailutils
-      - python-mysqldb
+      - python3-mysqldb
     state: present
   notify: restart icinga2

@@ -11,7 +11,7 @@ __monitoring_plugins_Ubuntu_18:
 
 __monitoring_plugins_custom_Ubuntu_18: []
 
-__monitoring_plugins_Ubuntu_16:
+__monitoring_plugins_Ubuntu_20:
   pkgs: []
 
-__monitoring_plugins_custom_Ubuntu_16: []
+__monitoring_plugins_custom_Ubuntu_20: []

@@ -5,21 +5,19 @@ driver:
   name: docker
 scenario:
   name: default
-lint:
-  name: yamllint
 platforms:
   - name: debian-icinga2-master
     groups:
       - icinga2master
       - icingaweb2
-    image: debian:10
-    command: /sbin/init
+    image: debian:11
+    command: /lib/systemd/systemd
     privileged: True
   - name: debian-icinga2-satellite
     groups:
       - icinga2satellite
-    image: debian:10
-    command: /sbin/init
+    image: debian:12
+    command: /lib/systemd/systemd
     privileged: True
   - name: debian-icinga2-satclient
     groups:
@@ -32,7 +30,7 @@ platforms:
     groups:
       - icinga2client
       - icinga2stdclient
-    image: debian:9
+    image: debian:12
 provisioner:
   name: ansible
   config_options:
@@ -58,6 +56,8 @@ provisioner:
       icinga2master:
         icinga2_admin_email: not@available.invalid
         icinga2_idodb_pass: idodbpass
+        php7_versions:
+          - '7.4'
       icingaweb2:
         apache2_adminhost_https: false
         icingaweb_db_pass: webdbpass
@@ -76,11 +76,5 @@ provisioner:
           zone: satellite
           endpoints:
             - "{{ groups.icinga2satellite|first }}"
-  lint:
-    name: ansible-lint
-    options:
-      x: ["204"]
 verifier:
   name: testinfra
-  lint:
-    name: flake8

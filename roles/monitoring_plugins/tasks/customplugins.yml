@@ -1,0 +1,10 @@
+---
+- name: Copy custom plugins to clients
+  template:
+    src: "{{ item }}"
+    dest: "{{ monitoring_plugins_path }}/"
+    owner: root
+    group: root
+    mode: "0755"
+  with_fileglob:
+    - ../files/customplugins/*
